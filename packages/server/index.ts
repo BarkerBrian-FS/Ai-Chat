@@ -3,10 +3,7 @@ import type { Request, Response } from "express";
 import dotenv from "dotenv";
 import OpenAI from "openai";
 import z from "zod";
-import {
-  getLastResponseId,
-  setLastResponseId,
-} from "./repositories/conversations.repository";
+import { conversationRepository } from "./repositories/conversations.repository";
 
 dotenv.config();
 
@@ -53,10 +50,11 @@ app.post("/api/chat", async (req: Request, res: Response) => {
       model: "gpt-5-mini",
       input: prompt,
       max_output_tokens: 100,
-      previous_response_id: getLastResponseId(conversationId),
+      previous_response_id:
+        conversationRepository.getLastResponseId(conversationId),
     });
 
-    setLastResponseId(conversationId, response.id);
+    conversationRepository.setLastResponseId(conversationId, response.id);
 
     res.json({ message: response.output_text });
   } catch (error) {
