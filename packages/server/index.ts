@@ -1,7 +1,7 @@
 import express from "express";
 import type { Request, Response } from "express";
 import dotenv from "dotenv";
-import z from "zod";
+import { chatController } from "./controllers/chat.controller";
 
 dotenv.config();
 
@@ -19,9 +19,7 @@ app.get("/api/hello", (req: Request, res: Response) => {
   res.json({ message: "Hello World" });
 });
 
-app.post("/api/chat", async (req: Request, res: Response) => {
-  console.log(req.body);
-});
+app.post("/api/chat", chatController.sendMessage);
 
 app.listen(port, () => {
   console.log(`Server running on ${port}`);
